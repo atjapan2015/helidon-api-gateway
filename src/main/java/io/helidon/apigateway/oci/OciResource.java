@@ -24,9 +24,7 @@ import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -38,6 +36,7 @@ import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.helidon.apigateway.oci.config.AppConfig;
+import io.helidon.apigateway.oci.entity.FuncBody;
 import io.helidon.apigateway.oci.entity.OciHttpHeaders;
 import io.helidon.apigateway.oci.facade.OciFacade;
 import io.helidon.apigateway.oci.facade.impl.OciFacadeImpl;
@@ -153,52 +152,12 @@ public class OciResource {
 
 	@SuppressWarnings({ "checkstyle:designforextension", "static-access" })
 	@Path("/headers")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public OciHttpHeaders getHttpGetHeaders() {
-
-		OciFacade ociFacade = OciFacadeImpl.getInstance();
-		return ociFacade.getHttpHeaders("get");
-	}
-
-	@SuppressWarnings({ "checkstyle:designforextension", "static-access" })
-	@Path("/headers")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public OciHttpHeaders getHttpPostHeaders() {
+	public OciHttpHeaders getHttpPostHeaders(FuncBody funcBody) {
 
 		OciFacade ociFacade = OciFacadeImpl.getInstance();
-		return ociFacade.getHttpHeaders("post");
-	}
-
-	@SuppressWarnings({ "checkstyle:designforextension", "static-access" })
-	@Path("/headers")
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-	public OciHttpHeaders getHttpPutHeaders() {
-
-		OciFacade ociFacade = OciFacadeImpl.getInstance();
-		return ociFacade.getHttpHeaders("put");
-	}
-
-	@SuppressWarnings({ "checkstyle:designforextension", "static-access" })
-	@Path("/headers")
-	@PATCH
-	@Produces(MediaType.APPLICATION_JSON)
-	public OciHttpHeaders getHttpPatchHeaders() {
-
-		OciFacade ociFacade = OciFacadeImpl.getInstance();
-		return ociFacade.getHttpHeaders("patch");
-	}
-
-	@SuppressWarnings({ "checkstyle:designforextension", "static-access" })
-	@Path("/headers")
-	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
-	public OciHttpHeaders getHttpDeleteHeaders() {
-
-		OciFacade ociFacade = OciFacadeImpl.getInstance();
-		return ociFacade.getHttpHeaders("delete");
+		return ociFacade.getHttpHeaders(funcBody);
 	}
 
 	private JsonObject createResponse(String who) {

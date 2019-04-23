@@ -1,6 +1,7 @@
 package io.helidon.apigateway.oci.facade.impl;
 
 import io.helidon.apigateway.oci.config.AppConfig;
+import io.helidon.apigateway.oci.entity.FuncBody;
 import io.helidon.apigateway.oci.entity.OciHttpHeaders;
 import io.helidon.apigateway.oci.facade.OciFacade;
 import io.helidon.apigateway.oci.util.RestUtil;
@@ -18,13 +19,12 @@ public class OciFacadeImpl implements OciFacade {
 	private final String privateKeyFilename = AppConfig.PRIVATE_PEM;
 
 	@Override
-	public OciHttpHeaders getHttpHeaders(String method) {
+	public OciHttpHeaders getHttpHeaders(FuncBody funcBody) {
 
 		OciHttpHeaders ociHttpHeaders = new OciHttpHeaders();
 
-		String uri = "http://dummy";
 		RestUtil restUtil = RestUtil.getInstance();
-		String result[] = restUtil.RestHeaders(apiKey, privateKeyFilename, uri, method);
+		String result[] = restUtil.RestHeaders(apiKey, privateKeyFilename, funcBody.getUri(), funcBody.getMethod());
 
 		ociHttpHeaders.setDate(result[0]);
 		ociHttpHeaders.setAuthorization(result[1]);
