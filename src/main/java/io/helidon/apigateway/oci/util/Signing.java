@@ -54,14 +54,14 @@ public class Signing {
 			DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
 			DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
 			REQUIRED_HEADERS = ImmutableMap.<String, List<String>>builder()
-					.put("get", ImmutableList.of("date", "(request-target)", "host"))
-					.put("head", ImmutableList.of("date", "(request-target)", "host"))
-					.put("delete", ImmutableList.of("date", "(request-target)", "host"))
+					.put("get", ImmutableList.of("x-date", "(request-target)", "host"))
+					.put("head", ImmutableList.of("x-date", "(request-target)", "host"))
+					.put("delete", ImmutableList.of("x-date", "(request-target)", "host"))
 					.put("put",
-							ImmutableList.of("date", "(request-target)", "host", "content-length", "content-type",
+							ImmutableList.of("x-date", "(request-target)", "host", "content-length", "content-type",
 									"x-content-sha256"))
-					.put("post", ImmutableList.of("date", "(request-target)", "host", "content-length", "content-type",
-							"x-content-sha256"))
+					.put("post", ImmutableList.of("x-date", "(request-target)", "host", "content-length",
+							"content-type", "x-content-sha256"))
 					.build();
 		}
 		private final Map<String, Signer> signers;
@@ -112,8 +112,8 @@ public class Signing {
 			}
 			final String path = extractPath(request.getURI());
 			// supply date if missing
-			if (!request.containsHeader("date")) {
-				request.addHeader("date", DATE_FORMAT.format(new Date()));
+			if (!request.containsHeader("x-date")) {
+				request.addHeader("x-date", DATE_FORMAT.format(new Date()));
 			}
 			// supply host if mossing
 			if (!request.containsHeader("host")) {

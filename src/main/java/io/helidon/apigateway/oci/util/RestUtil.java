@@ -52,7 +52,7 @@ public class RestUtil {
 
 		signer.signRequest(request);
 
-		httpHeaders[0] = request.getFirstHeader("date").getValue();
+		httpHeaders[0] = request.getFirstHeader("x-date").getValue();
 		httpHeaders[1] = request.getFirstHeader("Authorization").getValue();
 
 		return httpHeaders;
