@@ -23,20 +23,15 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.helidon.apigateway.oci.config.AppConfig;
-import io.helidon.apigateway.oci.entity.FuncBody;
 import io.helidon.apigateway.oci.entity.OciHttpHeaders;
 import io.helidon.apigateway.oci.facade.OciFacade;
 import io.helidon.apigateway.oci.facade.impl.OciFacadeImpl;
@@ -100,70 +95,32 @@ public class OciResource {
 		}
 	}
 
-	/**
-	 * Return a wordly greeting message.
-	 *
-	 * @return {@link JsonObject}
-	 */
-	@SuppressWarnings("checkstyle:designforextension")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public JsonObject getDefaultMessage() {
-		return createResponse("World");
-	}
-
-	/**
-	 * Return a greeting message using the name that was provided.
-	 *
-	 * @param name the name to greet
-	 * @return {@link JsonObject}
-	 */
-	@SuppressWarnings("checkstyle:designforextension")
-	@Path("/{name}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public JsonObject getMessage(@PathParam("name") String name) {
-		return createResponse(name);
-	}
-
-	/**
-	 * Set the greeting to use in future messages.
-	 *
-	 * @param jsonObject JSON containing the new greeting
-	 * @return {@link Response}
-	 */
-	@SuppressWarnings("checkstyle:designforextension")
-	@Path("/greeting")
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateGreeting(JsonObject jsonObject) {
-
-		if (!jsonObject.containsKey("greeting")) {
-			JsonObject entity = JSON.createObjectBuilder().add("error", "No greeting provided").build();
-			return Response.status(Response.Status.BAD_REQUEST).entity(entity).build();
-		}
-
-		String newGreeting = jsonObject.getString("greeting");
-
-		greetingProvider.setMessage(newGreeting);
-		return Response.status(Response.Status.NO_CONTENT).build();
-	}
-
 	@SuppressWarnings({ "checkstyle:designforextension", "static-access" })
 	@Path("/headers")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public OciHttpHeaders getHttpPostHeaders(FuncBody funcBody) {
+	public OciHttpHeaders getHttpPostHeaders(@HeaderParam("oci-method") String method,
+			@HeaderParam("oci-uri") String uri, JsonObject jsonObject) {
 
 		OciFacade ociFacade = OciFacadeImpl.getInstance();
-		return ociFacade.getHttpHeaders(funcBody);
+		return ociFacade.getHttpHeaders(method, uri, jsonObject);
 	}
 
-	private JsonObject createResponse(String who) {
-		String msg = String.format("%s %s!", greetingProvider.getMessage(), who);
+	/*
+	 * This does NOT work
+	 */
+	@SuppressWarnings({ "checkstyle:designforextension", "static-access" })
+	@Path("/headers/string")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public OciHttpHeaders getHttpPostHeaders(@HeaderParam("oci-method") String method,
+			@HeaderParam("oci-uri") String uri, @HeaderParam("oci-content-length") String ocicontentlength,
+			String jsonObject) {
 
-		return JSON.createObjectBuilder().add("message", msg).build();
+		OciFacade ociFacade = OciFacadeImpl.getInstance();
+		OciHttpHeaders OciHttpHeaders = ociFacade.getHttpHeaders(method, uri, jsonObject);
+		OciHttpHeaders.setOcicontentlength(ocicontentlength);
+		return OciHttpHeaders;
 	}
 
 }

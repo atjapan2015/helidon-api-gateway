@@ -1,9 +1,13 @@
 package io.helidon.apigateway.oci.facade;
 
-import io.helidon.apigateway.oci.entity.FuncBody;
+import javax.json.JsonObject;
+
 import io.helidon.apigateway.oci.entity.OciHttpHeaders;
 
 public interface OciFacade {
 
-	OciHttpHeaders getHttpHeaders(FuncBody funcBody);
+	OciHttpHeaders getHttpHeaders(String method, String uri, JsonObject jsonObject);
+
+	OciHttpHeaders getHttpHeaders(String method, String uri, String jsonObject);
+
 }
