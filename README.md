@@ -56,22 +56,5 @@ kubectl get service
 Try
 
 ```
-curl YOUR_NODE_IP:YOUR_SERVICE_PORT/oci/headers
-```
-
-```
 curl YOUR_NODE_IP:YOUR_SERVICE_PORT/oci/headers -X POST
 ```
-
-```
-curl YOUR_NODE_IP:YOUR_SERVICE_PORT/oci/headers -X PUT
-```
-
-```
-curl YOUR_NODE_IP:YOUR_SERVICE_PORT/oci/headers -X PATCH
-```
-
-```
-curl YOUR_NODE_IP:YOUR_SERVICE_PORT/oci/headers -X DELETE
-```
-  
